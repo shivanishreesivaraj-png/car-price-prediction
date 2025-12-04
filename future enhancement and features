@@ -1,0 +1,35 @@
+Future Improvements & Enhancements
+
+Here are potential upgrades to improve accuracy:
+
+🔹 Add more features if data becomes available:
+
+Brand / Model Popularity Score
+
+Service history & accident records
+
+Car condition score (Mint / Good / Average)
+
+City or region pricing variations
+
+Insurance & ownership duration
+
+🔹 Try multiple models & compare:
+
+Gradient Boosting Regressor
+
+XGBoost, LightGBM, CatBoost
+
+Hyperparameter tuning (GridSearchCV / RandomSearch)
+
+🔹 Improve Data Quality:
+
+Handle outliers (luxury cars price very high)
+
+More balanced dataset for petrol vs diesel
+
+🔹 Deploy Model:
+
+Build a web UI using Flask or Streamlit
+
+Allow users to predict car prices interactively

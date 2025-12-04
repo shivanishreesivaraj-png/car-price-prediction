@@ -1,0 +1,61 @@
+!pip install pandas numpy matplotlib seaborn scikit-learn
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+df = pd.read_csv("car_data.csv")
+df.dropna(inplace=True)
+
+label = LabelEncoder()
+df['Seller_Type'] = label.fit_transform(df['Seller_Type'])
+df['Fuel_Type'] = label.fit_transform(df['Fuel_Type'])
+df['Transmission'] = label.fit_transform(df['Transmission'])
+
+df['Car_Age'] = 2025 - df['Year']
+df.drop(['Year', 'Car_Name'], axis=1, inplace=True)
+
+X = df.drop('Selling_Price', axis=1)
+y = df['Selling_Price']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+r2 = r2_score(y_test, y_pred)
+print("RMSE:", rmse)
+print("R2 Score:", r2)
+
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title("Actual vs Predicted Car Prices")
+plt.show()
+
+
+fuel = input("Fuel Type (Petrol/Diesel/CNG): ")
+trans = input("Transmission (Manual/Automatic): ")
+seller = input("Seller Type (Dealer/Individual): ")
+age = int(input("Car Age (Years Old): "))
+present_price = float(input("Present Price (Lakhs): "))
+kms_driven = int(input("Kms Driven: "))
+owner = int(input("Owner Count (0/1/2): "))
+
+fuel_encoded = label.fit(df['Fuel_Type']).transform([fuel])[0]
+trans_encoded = label.fit(df['Transmission']).transform([trans])[0]
+seller_encoded = label.fit(df['Seller_Type']).transform([seller])[0]
+
+user_data = np.array([present_price, kms_driven, seller_encoded, fuel_encoded, trans_encoded, owner, age]).reshape(1, -1)
+price_predict = model.predict(user_data)
+print("Predicted Car Selling Price (Lakhs):", round(price_predict[0], 2))
